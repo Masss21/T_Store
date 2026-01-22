@@ -48,6 +48,7 @@
         background: #229954;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+        color: white;
     }
 
     .stats-grid {
@@ -94,7 +95,7 @@
 
     .filters-section {
         background: white;
-        padding: 25px;
+        padding: 20px 25px;
         border-radius: 12px;
         margin-bottom: 25px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -108,76 +109,53 @@
     }
 
     .filters-row {
-    display: flex; /* Ubah dari grid ke flex */
-    flex-wrap: wrap; /* Agar responsif jika layar sempit */
-    gap: 15px; /* Jarak antar elemen */
-    align-items: flex-end; /* Membuat tombol sejajar dengan input, bukan label */
-}
-
-    .filter-group {
         display: flex;
-        flex-direction: column;
-        gap: 8px;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
 
-    .filter-group label {
-        font-size: 13px;
+    .filter-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-item label {
+        font-size: 14px;
         font-weight: 600;
         color: #2c3e50;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    .filter-group input,
-    .filter-group select {
-        padding: 10px 12px;
+    .filter-item input,
+    .filter-item select {
+        flex: 1;
+        padding: 10px 14px;
         border: 2px solid #e9ecef;
         border-radius: 8px;
         font-size: 14px;
         transition: all 0.3s;
-        width: auto;
+        background: white;
     }
 
-    .filter-group input:focus,
-    .filter-group select:focus {
+    .filter-item input:focus,
+    .filter-item select:focus {
         outline: none;
         border-color: #3498db;
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
     }
 
-    .btn-filter {
-        padding: 10px 24px;
-        background: #3498db;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        height: fit-content;
-    }
-
-    .btn-filter:hover {
-        background: #2980b9;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-    }
-
-    .btn-reset {
-        padding: 10px 24px;
-        background: #95a5a6;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-decoration: none;
-        display: inline-block;
-        height: fit-content;
-    }
-
-    .btn-reset:hover {
-        background: #7f8c8d;
-        transform: translateY(-2px);
+    .filter-divider {
+        width: 1px;
+        height: 30px;
+        background: #e9ecef;
+        margin: 0 5px;
     }
 
     .customers-table {
@@ -266,6 +244,7 @@
     .btn-detail:hover {
         background: #2980b9;
         transform: translateY(-2px);
+        color: white;
     }
 
     .btn-delete {
@@ -301,7 +280,14 @@
             grid-template-columns: repeat(2, 1fr);
         }
         .filters-row {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .filter-item {
+            min-width: 100%;
+        }
+        .filter-divider {
+            display: none;
         }
     }
 
@@ -332,7 +318,6 @@
 <!-- Header Section -->
 <div class="header-section">
     <h2 class="header-title">👥 Kelola Pelanggan</h2>
-    
 </div>
 
 <!-- Statistics Cards -->
@@ -364,35 +349,43 @@
 
 <!-- Filters Section -->
 <div class="filters-section">
-    <form method="GET" action="{{ route('admin.customers.index') }}">
+    <form method="GET" action="{{ route('admin.customers.index') }}" id="filterForm">
         <div class="filters-row">
-            <div class="filter-group">
-                <label>🔍 Cari Pelanggan</label>
-                <input type="text" name="search" placeholder="Nama, email, atau telepon..." value="{{ request('search') }}">
+            <div class="filter-item">
+                <label>🔍 Search</label>
+                <input type="text" 
+                       name="search" 
+                       id="searchInput"
+                       placeholder="Nama, email, atau telepon..." 
+                       value="{{ request('search') }}"
+                       autocomplete="off">
             </div>
 
-            <div class="filter-group">
-                <label>✅ Status Verifikasi</label>
-                <select name="verified">
+            <div class="filter-divider"></div>
+
+            <div class="filter-item">
+                <label>✅ Status</label>
+                <select name="verified" id="verifiedSelect">
                     <option value="">Semua</option>
                     <option value="yes" {{ request('verified') == 'yes' ? 'selected' : '' }}>Terverifikasi</option>
                     <option value="no" {{ request('verified') == 'no' ? 'selected' : '' }}>Belum Verifikasi</option>
                 </select>
             </div>
 
-            <div class="filter-group">
-                <label>📊 Urutkan</label>
-                <select name="sort_by">
+            <div class="filter-divider"></div>
+
+            <div class="filter-item">
+                <label>📊 Sort</label>
+                <select name="sort_by" id="sortSelect">
                     <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Terbaru</option>
                     <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Nama</option>
                     <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>Email</option>
                 </select>
-                
             </div>
 
-            <button type="submit" class="btn-filter">Filter</button>
-            <a href="{{ route('admin.customers.index') }}" class="btn-reset">Reset</a>
-            <a href="{{ route('admin.customers.export') }}" class="btn-export">📥 Export CSV</a>
+            <div class="filter-divider"></div>
+
+            <a href="{{ route('admin.customers.export') }}" class="btn-export">📥 Export</a>
         </div>
     </form>
 </div>
@@ -472,4 +465,35 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+    // Auto submit form when filter changes
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const verifiedSelect = document.getElementById('verifiedSelect');
+        const sortSelect = document.getElementById('sortSelect');
+        const form = document.getElementById('filterForm');
+        
+        let searchTimeout;
+        
+        // Auto submit on search with debounce
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                form.submit();
+            }, 500); // Wait 500ms after user stops typing
+        });
+        
+        // Auto submit on select change
+        verifiedSelect.addEventListener('change', function() {
+            form.submit();
+        });
+        
+        sortSelect.addEventListener('change', function() {
+            form.submit();
+        });
+    });
+</script>
+@endpush
 @endsection

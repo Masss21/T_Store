@@ -1,0 +1,63 @@
+Struktur sementara
+
+T_Store/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   │   ├── DashboardController.php
+│   │   │   │   ├── ProductController.php
+│   │   │   │   ├── CategoryController.php
+│   │   │   │   ├── VoucherController.php
+│   │   │   │   └── OrderController.php
+│   │   │   ├── User/
+│   │   │   │   ├── HomeController.php
+│   │   │   │   ├── ProductController.php
+│   │   │   │   ├── CartController.php
+│   │   │   │   ├── WishlistController.php
+│   │   │   │   └── CheckoutController.php
+│   │   │   └── AuthController.php
+│   │   └── Middleware/
+│   │       ├── AdminMiddleware.php
+│   │       └── UserMiddleware.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Category.php
+│   │   ├── Product.php
+│   │   ├── Cart.php
+│   │   ├── Wishlist.php
+│   │   ├── Voucher.php
+│   │   ├── Order.php
+│   │   └── OrderItem.php
+│   └── ...
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── resources/
+│   ├── views/
+│   │   ├── admin/
+│   │   │   ├── layouts/
+│   │   │   ├── dashboard.blade.php
+│   │   │   ├── products/
+│   │   │   ├── categories/
+│   │   │   ├── vouchers/
+│   │   │   └── orders/
+│   │   ├── user/
+│   │   │   ├── layouts/
+│   │   │   ├── home.blade.php
+│   │   │   ├── products/
+│   │   │   ├── cart.blade.php
+│   │   │   ├── wishlist.blade.php
+│   │   │   └── checkout.blade.php
+│   │   └── auth/
+│   │       ├── login.blade.php
+│   │       ├── register.blade.php
+│   │       └── verify-email.blade.php
+│   └── ...
+├── routes/
+│   └── web.php
+└── public/
+    ├── css/
+    ├── js/
+    └── images/
+        └── products/

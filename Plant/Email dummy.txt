@@ -1,0 +1,9 @@
+✅ Admin berhasil dibuat!
+  Email: admin@tstore.com
+  Password: admin123
+
+
+✅ Sample User Credentials:
+Email: john@example.com | Password: password123
+Email: jane@example.com | Password: password123
+Email: bob@example.com | Password: password123

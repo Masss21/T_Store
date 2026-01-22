@@ -1,0 +1,40 @@
+step terakhir berhenti di step 
+💳 TAHAP 6.2 - Checkout Process (Shipping, Voucher, Payment)
+
+masih ada bug
+di claude ai baru sampai bagian sini
+🔧 Troubleshooting - Jika Masih 419
+Option A: Disable CSRF untuk Logout (Not Recommended)
+
+
+
+
+
+setelah perubahan sebelumnya untuk bagian login
+setelah logout dan login ulang selalu muncul seperti ini 
+
+http://127.0.0.1:8000/login 
+muncul error
+App
+ \ 
+Http
+ \ 
+Controllers
+ \ 
+AuthController
+ 
+: 73
+login
+
+Route [verification.notice] not defined.
+
+dan kalua login pakai akun lama baik user/admin muncul seperti ini
+
+http://127.0.0.1:8000/login
+419
+Page Expired
+
+di cart masih tidak bisa melakukan aksi tambah/kurangi jumlah item serta hapus item juga tidak bisa setelah update ini 
+
+button hovernya bisa cuma tidak berfungsi
+

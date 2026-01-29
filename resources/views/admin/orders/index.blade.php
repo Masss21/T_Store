@@ -243,8 +243,6 @@
     }
 </style>
 
-<h2 style="color: #2c3e50; font-size: 24px; margin-bottom: 25px;">🛒 Kelola Transaksi</h2>
-
 <!-- Statistics -->
 <div class="stats-grid">
     <div class="stat-card">

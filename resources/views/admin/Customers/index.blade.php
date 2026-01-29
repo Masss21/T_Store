@@ -4,6 +4,7 @@
 
 @section('content')
 <style>
+    /* ... semua CSS tetap sama ... */
     .header-section {
         background: white;
         padding: 20px 25px;
@@ -275,6 +276,17 @@
         margin-bottom: 20px;
     }
 
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     @media (max-width: 968px) {
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -314,11 +326,6 @@
         ❌ {{ session('error') }}
     </div>
 @endif
-
-<!-- Header Section -->
-<div class="header-section">
-    <h2 class="header-title">👥 Kelola Pelanggan</h2>
-</div>
 
 <!-- Statistics Cards -->
 <div class="stats-grid">
@@ -439,7 +446,8 @@
                     </td>
                     <td style="color: #7f8c8d;">{{ $customer->created_at->format('d M Y') }}</td>
                     <td style="text-align: center;">
-                        <a href="{{ route('admin.customers.show', $customer) }}" class="btn-detail">👁️ Detail</a>
+                        <button onclick="showCustomerDetail({{ $customer->id }})" class="btn-detail">👁️ Detail</button>
+                        
                         <form action="{{ route('admin.customers.destroy', $customer) }}" 
                               method="POST" 
                               style="display: inline;" 
@@ -466,9 +474,26 @@
     @endif
 </div>
 
+<!-- Modal Detail Pelanggan -->
+<div id="customerDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto;">
+    <div style="max-width: 1200px; margin: 50px auto; background: white; border-radius: 15px; padding: 0; position: relative; animation: slideDown 0.3s ease;">
+        <div style="padding: 25px; border-bottom: 2px solid #e9ecef; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; font-size: 24px; color: #2c3e50;">👤 Detail Pelanggan</h2>
+            <button onclick="closeCustomerDetail()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #7f8c8d; line-height: 1;">&times;</button>
+        </div>
+        
+        <div id="customerDetailContent" style="padding: 30px;">
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">⏳</div>
+                <div style="color: #7f8c8d;">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
-    // Auto submit form when filter changes
+    // Auto submit filter
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const verifiedSelect = document.getElementById('verifiedSelect');
@@ -477,15 +502,13 @@
         
         let searchTimeout;
         
-        // Auto submit on search with debounce
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(function() {
                 form.submit();
-            }, 500); // Wait 500ms after user stops typing
+            }, 500);
         });
         
-        // Auto submit on select change
         verifiedSelect.addEventListener('change', function() {
             form.submit();
         });
@@ -494,6 +517,192 @@
             form.submit();
         });
     });
+
+    // Show Customer Detail Modal
+    function showCustomerDetail(customerId) {
+        const modal = document.getElementById('customerDetailModal');
+        const content = document.getElementById('customerDetailContent');
+        
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        content.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">⏳</div>
+                <div style="color: #7f8c8d;">Loading...</div>
+            </div>
+        `;
+        
+        fetch(`/admin/customers/${customerId}/detail`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network error');
+            return response.json();
+        })
+        .then(data => {
+            content.innerHTML = renderCustomerDetail(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            content.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #e74c3c;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">❌</div>
+                    <div>Gagal memuat data pelanggan</div>
+                    <button onclick="closeCustomerDetail()" style="margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer;">Tutup</button>
+                </div>
+            `;
+        });
+    }
+
+    // Close Modal
+    function closeCustomerDetail() {
+        document.getElementById('customerDetailModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('customerDetailModal');
+        if (e.target === modal) closeCustomerDetail();
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCustomerDetail();
+    });
+
+    // Render Customer Detail
+    function renderCustomerDetail(data) {
+        const customer = data.customer;
+        const stats = data.stats;
+        
+        return `
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+                <div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #e9ecef;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 48px; color: white;">
+                                ${customer.name.charAt(0).toUpperCase()}
+                            </div>
+                            <h3 style="font-size: 22px; margin-bottom: 5px; color: #2c3e50;">${customer.name}</h3>
+                            <p style="color: #7f8c8d; font-size: 14px;">ID: #${customer.id}</p>
+                        </div>
+                        
+                        <div style="border-top: 2px solid #e9ecef; padding-top: 20px;">
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">📧 Email</div>
+                                <div style="font-weight: 600; color: #2c3e50;">${customer.email}</div>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">📱 Telepon</div>
+                                <div style="font-weight: 600; color: #2c3e50;">${customer.phone || '-'}</div>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">📅 Terdaftar</div>
+                                <div style="font-weight: 600; color: #2c3e50;">${formatDate(customer.created_at)}</div>
+                            </div>
+                            
+                            <div>
+                                <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">✅ Status</div>
+                                <span style="padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; ${customer.email_verified_at ? 'background: #d1e7dd; color: #0f5132;' : 'background: #f8d7da; color: #842029;'}">
+                                    ${customer.email_verified_at ? '✓ Terverifikasi' : '✗ Belum Verifikasi'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">🛍️</div>
+                            <div style="font-size: 28px; font-weight: 700;">${stats.total_orders}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Total Pesanan</div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">💰</div>
+                            <div style="font-size: 16px; font-weight: 700;">Rp ${formatNumber(stats.total_spent)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Total Belanja</div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 20px; border-radius: 12px; color: white; text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
+                            <div style="font-size: 28px; font-weight: 700;">${stats.completed_orders}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Selesai</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #e9ecef;">
+                        <h4 style="margin: 0 0 20px 0; font-size: 16px; color: #2c3e50;">🛍️ Riwayat Pesanan Terakhir</h4>
+                        ${stats.recent_orders && stats.recent_orders.length > 0 ? `
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; text-align: left;">
+                                            <th style="padding: 10px; font-size: 12px;">Order Number</th>
+                                            <th style="padding: 10px; font-size: 12px;">Total</th>
+                                            <th style="padding: 10px; font-size: 12px;">Status</th>
+                                            <th style="padding: 10px; font-size: 12px;">Tanggal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${stats.recent_orders.map(order => `
+                                            <tr style="border-bottom: 1px solid #e9ecef;">
+                                                <td style="padding: 10px; font-weight: 600; font-size: 13px;">${order.order_number}</td>
+                                                <td style="padding: 10px; font-weight: 700; color: #27ae60; font-size: 13px;">Rp ${formatNumber(order.total)}</td>
+                                                <td style="padding: 10px;">
+                                                    <span style="padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; ${getOrderStatusStyle(order.status)}">
+                                                        ${capitalizeFirst(order.status)}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 10px; color: #7f8c8d; font-size: 12px;">${formatDate(order.created_at)}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p style="text-align: center; color: #7f8c8d; padding: 30px;">Belum ada pesanan</p>'}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Helper functions
+    function formatNumber(num) {
+        return new Intl.NumberFormat('id-ID').format(num);
+    }
+
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
+
+    function capitalizeFirst(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function getOrderStatusStyle(status) {
+        const styles = {
+            'completed': 'background: #d1e7dd; color: #0f5132;',
+            'pending': 'background: #fff3cd; color: #856404;',
+            'cancelled': 'background: #f8d7da; color: #842029;',
+            'processing': 'background: #cfe2ff; color: #084298;',
+            'shipped': 'background: #cff4fc; color: #055160;',
+            'delivered': 'background: #d1e7dd; color: #0f5132;'
+        };
+        return styles[status]|| 'background: #e9ecef; color: #495057;';
+}
 </script>
 @endpush
 @endsection

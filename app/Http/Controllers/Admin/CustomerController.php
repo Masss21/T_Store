@@ -174,4 +174,26 @@ class CustomerController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+    /**
+ * Get customer detail for AJAX request (NEW METHOD)
+ */
+public function detail(User $customer)
+{
+    // Hitung statistik
+    $stats = [
+        'total_orders' => $customer->orders()->count(),
+        'total_spent' => $customer->orders()->where('payment_status', 'paid')->sum('total'),
+        'completed_orders' => $customer->orders()->where('status', 'completed')->count(),
+        'pending_orders' => $customer->orders()->where('status', 'pending')->count(),
+        'cancelled_orders' => $customer->orders()->where('status', 'cancelled')->count(),
+        'items_in_cart' => $customer->carts()->count(),
+        'items_in_wishlist' => $customer->wishlists()->count(),
+        'recent_orders' => $customer->orders()->latest()->take(5)->get(['order_number', 'total', 'status', 'created_at']),
+    ];
+
+    return response()->json([
+        'customer' => $customer,
+        'stats' => $stats,
+    ]);
+}
 }

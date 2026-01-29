@@ -164,10 +164,35 @@
         .demo-accounts strong {
             color: #667eea;
         }
+        .back {
+            width: content-fit;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .back img{
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background= transparent;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="{{ route('home') }}" class="back">
+    <img src="/Images/button/back.png">
+</a>
+
         <div class="logo">
             <h1>🛍️ T-Store</h1>
             <p>Electronics Shopping Made Easy</p>

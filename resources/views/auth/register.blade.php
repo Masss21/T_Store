@@ -115,10 +115,30 @@
         .link a:hover {
             text-decoration: underline;
         }
+        .back {
+            width: content-fit;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .back img{
+            width: 20px;
+            height: 20px;
+            border-radius: 5%;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="{{ route('home') }}" class="back">
+    <img src="/Images/button/back.png">
+</a>
         <h2>Buat Akun Baru</h2>
         <p class="subtitle">Bergabunglah dengan T-Store sekarang!</p>
 

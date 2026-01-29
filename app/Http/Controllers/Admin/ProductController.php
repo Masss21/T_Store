@@ -30,17 +30,18 @@ class ProductController extends Controller
 
     // Proses Simpan Produk
     public function store(Request $request)
-    {
-       $request->validate([
-    'category_id' => 'required|exists:categories,id',
-    'name' => 'required|string|max:255',
-    'description' => 'required|string',
-    'price' => 'required|numeric|min:0',
-    'stock' => 'required|integer|min:0',
-    'main_image' => 'required|image|mimes:jpeg,png,jpg|max:2048|dimensions:min_width=500,min_height=500',
-    'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048|dimensions:min_width=500,min_height=500',
-    'specifications' => 'nullable|string',
-]);
+{
+    $validated = $request->validate([
+        'category_id' => 'required|exists:categories,id',
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'specifications' => 'nullable|string',
+        'price' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // ✅ BENAR: Semua ukuran, max 5MB
+        'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // ✅ BENAR: Semua ukuran, max 5MB
+        'is_featured' => 'boolean',
+    ]);
         // Upload Main Image
         $mainImagePath = $request->file('main_image')->store('products', 'public');
 

@@ -23,7 +23,7 @@ class CartController extends Controller
         return view('user.cart.index', compact('cartItems', 'subtotal'));
     }
 
-    // Add to Cart (AJAX)
+    // Add to Cart (AJAX) - Auth akan dicek oleh middleware
     public function add(Request $request)
     {
         $request->validate([

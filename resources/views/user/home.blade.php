@@ -564,12 +564,24 @@ function addToWishlistFromHome(productId, productName) {
             product_id: productId
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        // ✅ TAMBAHAN: Cek status 401 untuk guest
+        if (response.status === 401) {
+            showToast('Silakan login terlebih dahulu untuk menambahkan ke wishlist', 'error', 2000);
+            setTimeout(() => {
+                window.location.href = '{{ route('login') }}?redirect={{ url()->current() }}';
+            }, 1000);
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
-        if (data.success) {
+        if (data && data.success) {
+            @auth
             updateWishlistBadge(data.wishlist_count, true);
+            @endauth
             showToast(`${productName} berhasil ditambahkan ke wishlist!`, 'success');
-        } else {
+        } else if (data && !data.success) {
             showToast(data.message, 'error');
         }
     })
@@ -593,15 +605,24 @@ function addToCartFromHome(productId, productName) {
             quantity: 1
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        // ✅ TAMBAHAN: Cek status 401 untuk guest
+        if (response.status === 401) {
+            showToast('Silakan login terlebih dahulu untuk menambahkan ke keranjang', 'error', 2000);
+            setTimeout(() => {
+                window.location.href = '{{ route('login') }}?redirect={{ url()->current() }}';
+            }, 1000);
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
-        if (data.success) {
-            // Update cart badge with animation
+        if (data && data.success) {
+            @auth
             updateCartBadge(data.cart_count, true);
-
-            // Show toast notification
+            @endauth
             showToast(`${productName} berhasil ditambahkan ke keranjang!`, 'success');
-        } else {
+        } else if (data && !data.success) {
             showToast(data.message, 'error');
         }
     })

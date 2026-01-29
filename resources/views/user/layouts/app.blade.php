@@ -7,7 +7,6 @@
     <title>@yield('title', 'Home') - T-Store</title>
     
     <style>
-        
         * {
             margin: 0;
             padding: 0;
@@ -123,6 +122,38 @@
             font-weight: 600;
         }
 
+        .btn-login, .btn-register {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-register {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-register:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
         .logout-btn {
             background: #e74c3c;
             color: white;
@@ -226,6 +257,122 @@
             color: #2c3e50;
         }
 
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 320px;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .toast.success {
+            border-left-color: #27ae60;
+        }
+
+        .toast.error {
+            border-left-color: #e74c3c;
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #7f8c8d;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: #2c3e50;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        /* Cart Icon Pulse Animation */
+        .cart-icon.pulse {
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.15);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            75% {
+                transform: scale(1.12);
+            }
+        }
+
+        .cart-badge.bump {
+            animation: bump 0.4s ease;
+        }
+
+        @keyframes bump {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .mobile-toggle {
@@ -258,140 +405,16 @@
             .main-content {
                 padding: 20px 15px;
             }
+
+            .user-menu {
+                gap: 10px;
+            }
+
+            .btn-login, .btn-register {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
         }
-
-        /* Toast Notification */
-.toast-container {
-    position: fixed;
-    top: 90px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.toast {
-    background: white;
-    padding: 16px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 320px;
-    animation: slideInRight 0.3s ease;
-    border-left: 4px solid;
-}
-
-.toast.success {
-    border-left-color: #27ae60;
-}
-
-.toast.error {
-    border-left-color: #e74c3c;
-}
-
-.toast-icon {
-    font-size: 24px;
-}
-
-.toast-message {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-.toast-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #7f8c8d;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.toast-close:hover {
-    color: #2c3e50;
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideOutRight {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-}
-
-/* Cart Icon Pulse Animation */
-.cart-icon.pulse {
-    animation: pulse 0.6s ease;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    25% {
-        transform: scale(1.15);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    75% {
-        transform: scale(1.12);
-    }
-}
-
-.cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #e74c3c;
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 10px;
-    min-width: 18px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cart-badge.bump {
-    animation: bump 0.4s ease;
-}
-
-@keyframes bump {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.3);
-    }
-}
     </style>
 
     @stack('styles')
@@ -408,39 +431,59 @@
             <button class="mobile-toggle" id="mobileToggle">☰</button>
 
             <div class="nav-menu" id="navMenu">
-    <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="{{ route('wishlist.index') }}" class="nav-link {{ request()->routeIs('wishlist.*') ? 'active' : '' }}" style="position: relative;">
-        <span>❤️</span>
-        <span>Wishlist</span>
-        <span class="cart-badge" id="wishlistBadge" style="display: none;">0</span>
-    </a>
-</div>
-
+                <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                    <span>🏠</span>
+                    <span>Home</span>
+                </a>
+                
+                @auth
+                    {{-- Authenticated User - Link to Wishlist --}}
+                    <a href="{{ route('wishlist.index') }}" class="nav-link {{ request()->routeIs('wishlist.*') ? 'active' : '' }}" style="position: relative;">
+                        <span>❤️</span>
+                        <span>Wishlist</span>
+                        <span class="cart-badge" id="wishlistBadge" style="display: none;">0</span>
+                    </a>
+                @else
+                    {{-- Guest User - Redirect to Login --}}
+                    <a href="javascript:void(0)" onclick="redirectToLogin('wishlist')" class="nav-link" style="position: relative;" title="Login untuk melihat wishlist">
+                        <span>❤️</span>
+                        <span>Wishlist</span>
+                    </a>
+                @endauth
+            </div>
 
             <div class="user-menu">
-    <a href="{{ route('cart.index') }}" class="cart-icon" style="text-decoration: none; color: inherit;">
-        🛒
-        <span class="cart-badge" id="cartBadge">0</span>
-    </a>
+                @auth
+                    {{-- Authenticated User --}}
+                    <a href="{{ route('cart.index') }}" class="cart-icon" style="text-decoration: none; color: inherit;">
+                        🛒
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </a>
 
-    <div class="user-info">
-        <div class="user-avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
-        <span style="font-weight: 600; display: none;" class="user-name">{{ auth()->user()->name }}</span>
-    </div>
+                    <div class="user-info">
+                        <div class="user-avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
+                        <span style="font-weight: 600; display: none;" class="user-name">{{ auth()->user()->name }}</span>
+                    </div>
 
-    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-    @csrf
-    <button type="submit" class="logout-btn">Logout</button>
-</form>
-</div>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                @else
+                    {{-- Guest User --}}
+                    <a href="javascript:void(0)" onclick="redirectToLogin('cart')" class="cart-icon" style="text-decoration: none; color: inherit;" title="Login untuk melihat keranjang">
+                        🛒
+                    </a>
+                    
+                    <a href="{{ route('login') }}" class="btn-login">Login</a>
+                    <a href="{{ route('register') }}" class="btn-register">Register</a>
+                @endauth
+            </div>
         </div>
     </nav>
 
     <!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -495,16 +538,18 @@
         const mobileToggle = document.getElementById('mobileToggle');
         const navMenu = document.getElementById('navMenu');
 
-        mobileToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
 
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
-                navMenu.classList.remove('active');
-            }
-        });
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+                    navMenu.classList.remove('active');
+                }
+            });
+        }
 
         // Auto-hide alerts
         setTimeout(function() {
@@ -518,138 +563,140 @@
             });
         }, 5000);
 
-        // Load Cart Count on Page Load
-    function loadCartCount() {
-        fetch('{{ route('cart.count') }}', {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
+        @auth
+        // Load Cart Count on Page Load (Only for authenticated users)
+        function loadCartCount() {
+            fetch('{{ route('cart.count') }}', {
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateCartBadge(data.count, false);
+            })
+            .catch(error => console.error('Error loading cart count:', error));
+        }
+
+        // Load Wishlist Count
+        function loadWishlistCount() {
+            fetch('{{ route('wishlist.count') }}', {
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateWishlistBadge(data.count, false);
+            })
+            .catch(error => console.error('Error loading wishlist count:', error));
+        }
+
+        // Update Cart Badge
+        function updateCartBadge(count, animate = true) {
             const badge = document.getElementById('cartBadge');
+            const cartIcon = document.querySelector('.cart-icon');
+            
             if (badge) {
-                badge.textContent = data.count;
-                if (data.count === 0) {
+                badge.textContent = count;
+                
+                if (count === 0) {
                     badge.style.display = 'none';
                 } else {
                     badge.style.display = 'flex';
-                }
-            }
-        })
-        .catch(error => console.error('Error loading cart count:', error));
-    }
-
-    // Load on page load
-    document.addEventListener('DOMContentLoaded', function() {
-    loadCartCount();
-    loadWishlistCount(); // Tambahkan ini
-});
-
-     // ========== TOAST NOTIFICATION SYSTEM ==========
-    function showToast(message, type = 'success', duration = 3000) {
-        const container = document.getElementById('toastContainer');
-        
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        
-        const icon = type === 'success' ? '✓' : '✗';
-        
-        toast.innerHTML = `
-            <span class="toast-icon">${icon}</span>
-            <span class="toast-message">${message}</span>
-            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-        `;
-        
-        container.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, duration);
-    }
-
-    // ========== CART BADGE ANIMATION ==========
-    function updateCartBadge(count, animate = true) {
-        const badge = document.getElementById('cartBadge');
-        const cartIcon = document.querySelector('.cart-icon');
-        
-        if (badge) {
-            badge.textContent = count;
-            
-            if (count === 0) {
-                badge.style.display = 'none';
-            } else {
-                badge.style.display = 'flex';
-                
-                if (animate) {
-                    // Animate badge
-                    badge.classList.add('bump');
-                    setTimeout(() => badge.classList.remove('bump'), 400);
                     
-                    // Animate cart icon
-                    if (cartIcon) {
-                        cartIcon.classList.add('pulse');
-                        setTimeout(() => cartIcon.classList.remove('pulse'), 600);
+                    if (animate) {
+                        badge.classList.add('bump');
+                        setTimeout(() => badge.classList.remove('bump'), 400);
+                        
+                        if (cartIcon) {
+                            cartIcon.classList.add('pulse');
+                            setTimeout(() => cartIcon.classList.remove('pulse'), 600);
+                        }
                     }
                 }
             }
         }
-    }
 
-    // Load Cart Count on Page Load
-    function loadCartCount() {
-        fetch('{{ route('cart.count') }}', {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            updateCartBadge(data.count, false); // No animation on page load
-        })
-        .catch(error => console.error('Error loading cart count:', error));
-    }
-
-    // Load on page load
-   document.addEventListener('DOMContentLoaded', function() {
-    loadCartCount();
-    loadWishlistCount(); // Tambahkan ini
-});
-
-    // ========== WISHLIST BADGE ANIMATION ==========
-function updateWishlistBadge(count, animate = true) {
-    const badge = document.getElementById('wishlistBadge');
-    
-    if (badge) {
-        badge.textContent = count;
-        
-        if (count === 0) {
-            badge.style.display = 'none';
-        } else {
-            badge.style.display = 'flex';
+        // Update Wishlist Badge
+        function updateWishlistBadge(count, animate = true) {
+            const badge = document.getElementById('wishlistBadge');
             
-            if (animate) {
-                badge.classList.add('bump');
-                setTimeout(() => badge.classList.remove('bump'), 400);
+            if (badge) {
+                badge.textContent = count;
+                
+                if (count === 0) {
+                    badge.style.display = 'none';
+                } else {
+                    badge.style.display = 'flex';
+                    
+                    if (animate) {
+                        badge.classList.add('bump');
+                        setTimeout(() => badge.classList.remove('bump'), 400);
+                    }
+                }
             }
         }
-    }
-}
 
-// Load Wishlist Count
-function loadWishlistCount() {
-    fetch('{{ route('wishlist.count') }}', {
-        headers: {
-            'Accept': 'application/json',
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartCount();
+            loadWishlistCount();
+        });
+        @endauth
+
+        // Toast Notification System
+        function showToast(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : '✗';
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        updateWishlistBadge(data.count, false);
-    })
-    .catch(error => console.error('Error loading wishlist count:', error));
-}
+
+        // Global function to handle guest add to cart (redirect to login)
+        window.handleGuestAddToCart = function() {
+            showToast('Silakan login terlebih dahulu untuk menambahkan ke keranjang', 'error');
+            setTimeout(() => {
+                window.location.href = '{{ route('login') }}';
+            }, 1500);
+        };
+
+        @guest
+        // Guest User - Redirect to Login Function
+        function redirectToLogin(action) {
+            let message = '';
+            let redirectUrl = '{{ route('login') }}';
+            
+            if (action === 'cart') {
+                message = 'Silakan login terlebih dahulu untuk melihat keranjang';
+            } else if (action === 'wishlist') {
+                message = 'Silakan login terlebih dahulu untuk melihat wishlist';
+            } else {
+                message = 'Silakan login terlebih dahulu';
+            }
+            
+            showToast(message, 'error', 2000);
+            
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1500);
+        }
+        @endguest
     </script>
 
     @stack('scripts')
